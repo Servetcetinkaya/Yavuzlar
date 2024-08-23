@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> 
+    <title>Kim Hacker Olmak İster</title> 
+    <style>
+        body {
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: #f4f4f4; 
+        }
+
+        
+        #app {
+            max-width: 600px;
+            margin: 0 auto; 
+            text-align: center; 
+        }
+
+        
+        h1 {
+            font-size: 24px; 
+            margin-bottom: 20px; 
+        }
+
+        
+        #question-form, #question-search, #quiz, #start-quiz-button {
+            margin-bottom: 20px; 
+        }
+
+        
+        input, select, button {
+            margin-top: 10px; 
+            padding: 5px; 
+            font-size: 16px; 
+        }
+
+        
+        #question-list div {
+            padding: 5px; 
+            border-bottom: 1px solid #ccc; 
+        }
+
+        
+        #quiz input[type="radio"] {
+            margin-right: 10px; 
+        }
+
+        
+        #start-quiz-button button {
+            padding: 10px 20px; 
+            font-size: 18px; 
+            background-color: #007BFF; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+        }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Siber Vatanı Tanıdığınıza Emin Misiniz?</h1>
+        
+        <div id="start-quiz-button">
+            <button onclick="startQuiz()">EVET ! </button>
+        </div>
+
+        <div id="quiz" style="display: none;">
+            <div id="quiz-question"></div>
+            <div id="quiz-choices"></div>
+            <button onclick="submitAnswer()">Cevapla</button>
+            <p id="score">Puan: 0</p>
+
+           
+            <div id="question-form">
+                <input type="text" id="quiz-question-input" placeholder="Soruyu girin">
+                <div id="choices">
+                    <input type="text" id="quiz-choice1" placeholder="Seçenek 1">
+                    <input type="text" id="quiz-choice2" placeholder="Seçenek 2">
+                    <input type="text" id="quiz-choice3" placeholder="Seçenek 3">
+                    <input type="text" id="quiz-choice4" placeholder="Seçenek 4">
+                </div>
+                <select id="quiz-correct-answer">
+                    <option value="1">Seçenek 1</option>
+                    <option value="2">Seçenek 2</option>
+                    <option value="3">Seçenek 3</option>
+                    <option value="4">Seçenek 4</option>
+                </select>
+                <select id="quiz-difficulty">
+                    <option value="easy">Kolay</option>
+                    <option value="medium">Orta</option>
+                    <option value="hard">Zor</option>
+                </select>
+                <button onclick="addQuizQuestion()">Soru Ekle</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        let questions = [];  
+        let currentQuizIndex = 0;
+        let score = 0;
+
+        function generateRandomQuestions() {
+            questions = [
+                { text: "Özgür Hoca Hangi Takımda", choices: ["Yavuzlar", "Zayotem", "CTİ", "CyberDET"], correctAnswer: 1, difficulty: "easy" },
+                { text: "Özgür Hoca'nın sorumlu takım adı nedir'?", choices: ["Samba", "Gamma", "Anna", "Kamma"], correctAnswer: 2, difficulty: "hard" },
+                { text: "Sadican Üstün hangi şirketin kurucu ortağı?", choices: ["Adeo", "BG-TEK", "Cyrops A.Ş", "Gais"], correctAnswer: 3, difficulty: "easy" },
+                { text: "Siber Vatanda 4 aşamlı eğitimlerinde 'Harun Şeker' hangi eğitimi vermekte'", choices: ["SızmaT.", "CEH", "Reverse", "Web"], correctAnswer: 1, difficulty: "medium" },
+            ];
+        }
+
+        
+        generateRandomQuestions();
+
+        
+        function addQuizQuestion() {
+            const questionInput = document.getElementById('quiz-question-input').value; 
+            const choice1 = document.getElementById('quiz-choice1').value; 
+            const choice2 = document.getElementById('quiz-choice2').value; 
+            const choice3 = document.getElementById('quiz-choice3').value; 
+            const choice4 = document.getElementById('quiz-choice4').value; 
+            const correctAnswer = document.getElementById('quiz-correct-answer').value; 
+            const difficulty = document.getElementById('quiz-difficulty').value; 
+
+            
+            if (questionInput.trim() && choice1.trim() && choice2.trim() && choice3.trim() && choice4.trim()) {
+                questions.push({
+                    text: questionInput, 
+                    choices: [choice1, choice2, choice3, choice4], 
+                    correctAnswer: parseInt(correctAnswer), 
+                    difficulty: difficulty 
+                });
+                // Giriş alanlarını temizle
+                document.getElementById('quiz-question-input').value = '';
+                document.getElementById('quiz-choice1').value = '';
+                document.getElementById('quiz-choice2').value = '';
+                document.getElementById('quiz-choice3').value = '';
+                document.getElementById('quiz-choice4').value = '';
+            }
+        }
+
+        // Quiz'i başlatır
+        function startQuiz() {
+            if (questions.length === 0) { 
+                alert("hoopğ soru eklemedin reis !"); 
+                return;
+            }
+            currentQuizIndex = 0; 
+            score = 0; 
+            document.getElementById('quiz').style.display = 'block'; 
+            document.getElementById('start-quiz-button').style.display = 'none'; 
+            showQuestion(); 
+        }
+
+       
+        function showQuestion() {
+            const quizQuestion = document.getElementById('quiz-question'); 
+            const quizChoices = document.getElementById('quiz-choices'); 
+            if (currentQuizIndex < questions.length) { 
+                quizQuestion.textContent = questions[currentQuizIndex].text; 
+                quizChoices.innerHTML = ''; 
+                questions[currentQuizIndex].choices.forEach((choice, index) => {
+                    
+                    quizChoices.innerHTML += `
+                        <input type="radio" name="quiz-choice" value="${index + 1}"> ${choice}<br>
+                    `;
+                });
+            } else {
+                quizQuestion.textContent = "Tebrikler! Tüm soruları tamamladınız."; 
+                quizChoices.innerHTML = ''; 
+                document.getElementById('score').textContent = "Toplam Puan: " + score; 
+            }
+        }
+
+        function submitAnswer() {
+            const selectedAnswer = document.querySelector('input[name="quiz-choice"]:checked'); 
+            if (selectedAnswer) { 
+                const answerValue = parseInt(selectedAnswer.value); 
+                if (answerValue === questions[currentQuizIndex].correctAnswer) { 
+                    score += 10; // Puanı artır
+                }
+                currentQuizIndex++; 
+                showQuestion(); 
+            } else {
+                alert("Bir Cevabn seçinm"); 
+            }
+            document.getElementById('score').textContent = "Puan: " + score; 
+        }
+    </script>
+</body>
+</html>
+
