@@ -1,0 +1,1 @@
+İlk önce create_database.php betik dosyası çalıştırılmalı, bu betik script gibi bir veritabanı oluşturucak. Daha sonra login.php gelerek ordan ister, soru ekler düzenler. İsterseniz Özgür adlı Veya Servet adlı kullanıcıalra girip quiz'i başlatabilirsiniz. Her soru 1 puan değerinde.
