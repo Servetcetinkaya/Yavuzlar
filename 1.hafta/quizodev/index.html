@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8"> 
     <title>Kim Hacker Olmak İster</title> 
@@ -11,44 +11,37 @@
             background-color: #f4f4f4; 
         }
 
-        
         #app {
             max-width: 600px;
             margin: 0 auto; 
             text-align: center; 
         }
 
-        
         h1 {
             font-size: 24px; 
             margin-bottom: 20px; 
         }
 
-        
-        #question-form, #question-search, #quiz, #start-quiz-button {
+        #soru-formu, #soru-listesi, #quiz, #quiz-baslat-butonu {
             margin-bottom: 20px; 
         }
 
-        
         input, select, button {
             margin-top: 10px; 
             padding: 5px; 
             font-size: 16px; 
         }
 
-        
-        #question-list div {
+        #soru-listesi div {
             padding: 5px; 
             border-bottom: 1px solid #ccc; 
         }
 
-        
         #quiz input[type="radio"] {
             margin-right: 10px; 
         }
 
-        
-        #start-quiz-button button {
+        #quiz-baslat-butonu button {
             padding: 10px 20px; 
             font-size: 18px; 
             background-color: #007BFF; 
@@ -57,139 +50,174 @@
             border-radius: 5px; 
             cursor: pointer; 
         }
-        }
     </style>
 </head>
 <body>
     <div id="app">
         <h1>Siber Vatanı Tanıdığınıza Emin Misiniz?</h1>
         
-        <div id="start-quiz-button">
-            <button onclick="startQuiz()">EVET ! </button>
+        <div id="quiz-baslat-butonu">
+            <button onclick="quiziBaslat()">EVET !</button>
         </div>
 
         <div id="quiz" style="display: none;">
-            <div id="quiz-question"></div>
-            <div id="quiz-choices"></div>
-            <button onclick="submitAnswer()">Cevapla</button>
-            <p id="score">Puan: 0</p>
+            <div id="quiz-soru"></div>
+            <div id="quiz-secenekler"></div>
+            <button onclick="cevapla()">Cevapla</button>
+            <p id="puan">Puan: 0</p>
+        </div>
 
-           
-            <div id="question-form">
-                <input type="text" id="quiz-question-input" placeholder="Soruyu girin">
-                <div id="choices">
-                    <input type="text" id="quiz-choice1" placeholder="Seçenek 1">
-                    <input type="text" id="quiz-choice2" placeholder="Seçenek 2">
-                    <input type="text" id="quiz-choice3" placeholder="Seçenek 3">
-                    <input type="text" id="quiz-choice4" placeholder="Seçenek 4">
-                </div>
-                <select id="quiz-correct-answer">
-                    <option value="1">Seçenek 1</option>
-                    <option value="2">Seçenek 2</option>
-                    <option value="3">Seçenek 3</option>
-                    <option value="4">Seçenek 4</option>
-                </select>
-                <select id="quiz-difficulty">
-                    <option value="easy">Kolay</option>
-                    <option value="medium">Orta</option>
-                    <option value="hard">Zor</option>
-                </select>
-                <button onclick="addQuizQuestion()">Soru Ekle</button>
+        <div id="soru-listesi">
+            <h2>Soruları Düzenle/Sil</h2>
+            <div id="sorular-container"></div>
+        </div>
+
+        <div id="soru-formu">
+            <h2>Yeni Soru Ekle</h2>
+            <input type="text" id="quiz-soru-input" placeholder="Soruyu girin">
+            <div id="secenekler">
+                <input type="text" id="quiz-secenek1" placeholder="Seçenek 1">
+                <input type="text" id="quiz-secenek2" placeholder="Seçenek 2">
+                <input type="text" id="quiz-secenek3" placeholder="Seçenek 3">
+                <input type="text" id="quiz-secenek4" placeholder="Seçenek 4">
             </div>
+            <select id="quiz-dogru-cevap">
+                <option value="1">Seçenek 1</option>
+                <option value="2">Seçenek 2</option>
+                <option value="3">Seçenek 3</option>
+                <option value="4">Seçenek 4</option>
+            </select>
+            <select id="quiz-zorluk">
+                <option value="easy">Kolay</option>
+                <option value="medium">Orta</option>
+                <option value="hard">Zor</option>
+            </select>
+            <button onclick="soruEkle()">Soru Ekle</button>
         </div>
     </div>
 
     <script>
-        
-        let questions = [];  
-        let currentQuizIndex = 0;
-        let score = 0;
+        let sorular = [];  
+        let mevcutSoruIndeksi = 0;
+        let puan = 0;
 
-        function generateRandomQuestions() {
-            questions = [
+        function rastgeleSorular() {
+            sorular = [
                 { text: "Özgür Hoca Hangi Takımda", choices: ["Yavuzlar", "Zayotem", "CTİ", "CyberDET"], correctAnswer: 1, difficulty: "easy" },
-                { text: "Özgür Hoca'nın sorumlu takım adı nedir'?", choices: ["Samba", "Gamma", "Anna", "Kamma"], correctAnswer: 2, difficulty: "hard" },
+                { text: "Özgür Hoca'nın sorumlu takım adı nedir?", choices: ["Samba", "Gamma", "Anna", "Kamma"], correctAnswer: 2, difficulty: "hard" },
                 { text: "Sadican Üstün hangi şirketin kurucu ortağı?", choices: ["Adeo", "BG-TEK", "Cyrops A.Ş", "Gais"], correctAnswer: 3, difficulty: "easy" },
-                { text: "Siber Vatanda 4 aşamlı eğitimlerinde 'Harun Şeker' hangi eğitimi vermekte'", choices: ["SızmaT.", "CEH", "Reverse", "Web"], correctAnswer: 1, difficulty: "medium" },
+                { text: "Siber Vatanda 4 aşamlı eğitimlerinde 'Harun Şeker' hangi eğitimi vermekte?", choices: ["SızmaT.", "CEH", "Reverse", "Web"], correctAnswer: 1, difficulty: "medium" },
             ];
+            soruListele();
         }
 
-        
-        generateRandomQuestions();
+        rastgeleSorular();
 
-        
-        function addQuizQuestion() {
-            const questionInput = document.getElementById('quiz-question-input').value; 
-            const choice1 = document.getElementById('quiz-choice1').value; 
-            const choice2 = document.getElementById('quiz-choice2').value; 
-            const choice3 = document.getElementById('quiz-choice3').value; 
-            const choice4 = document.getElementById('quiz-choice4').value; 
-            const correctAnswer = document.getElementById('quiz-correct-answer').value; 
-            const difficulty = document.getElementById('quiz-difficulty').value; 
+        function soruEkle() {
+            const soruInput = document.getElementById('quiz-soru-input').value; 
+            const secenek1 = document.getElementById('quiz-secenek1').value; 
+            const secenek2 = document.getElementById('quiz-secenek2').value; 
+            const secenek3 = document.getElementById('quiz-secenek3').value; 
+            const secenek4 = document.getElementById('quiz-secenek4').value; 
+            const dogruCevap = document.getElementById('quiz-dogru-cevap').value; 
+            const zorluk = document.getElementById('quiz-zorluk').value; 
 
-            
-            if (questionInput.trim() && choice1.trim() && choice2.trim() && choice3.trim() && choice4.trim()) {
-                questions.push({
-                    text: questionInput, 
-                    choices: [choice1, choice2, choice3, choice4], 
-                    correctAnswer: parseInt(correctAnswer), 
-                    difficulty: difficulty 
+            if (soruInput.trim() && secenek1.trim() && secenek2.trim() && secenek3.trim() && secenek4.trim()) {
+                sorular.push({
+                    text: soruInput, 
+                    choices: [secenek1, secenek2, secenek3, secenek4], 
+                    correctAnswer: parseInt(dogruCevap), 
+                    difficulty: zorluk 
                 });
 
-                document.getElementById('quiz-question-input').value = '';
-                document.getElementById('quiz-choice1').value = '';
-                document.getElementById('quiz-choice2').value = '';
-                document.getElementById('quiz-choice3').value = '';
-                document.getElementById('quiz-choice4').value = '';
+                document.getElementById('quiz-soru-input').value = '';
+                document.getElementById('quiz-secenek1').value = '';
+                document.getElementById('quiz-secenek2').value = '';
+                document.getElementById('quiz-secenek3').value = '';
+                document.getElementById('quiz-secenek4').value = '';
+
+                soruListele();
             }
         }
 
-       
-        function startQuiz() {
-            if (questions.length === 0) { 
-                alert("hoopğ soru eklemedin reis !"); 
+        function soruListele() {
+            const sorularContainer = document.getElementById('sorular-container');
+            sorularContainer.innerHTML = '';
+            sorular.forEach((soru, index) => {
+                const soruDiv = document.createElement('div');
+                soruDiv.innerHTML = `
+                    <strong>${index + 1}. ${soru.text}</strong><br>
+                    Seçenekler: ${soru.choices.join(', ')}<br>
+                    Zorluk: ${soru.difficulty}<br>
+                    <button onclick="soruDuzenle(${index})">Düzenle</button>
+                    <button onclick="soruSil(${index})">Sil</button>
+                `;
+                sorularContainer.appendChild(soruDiv);
+            });
+        }
+
+        function soruDuzenle(index) {
+            const soru = sorular[index];
+            document.getElementById('quiz-soru-input').value = soru.text;
+            document.getElementById('quiz-secenek1').value = soru.choices[0];
+            document.getElementById('quiz-secenek2').value = soru.choices[1];
+            document.getElementById('quiz-secenek3').value = soru.choices[2];
+            document.getElementById('quiz-secenek4').value = soru.choices[3];
+            document.getElementById('quiz-dogru-cevap').value = soru.correctAnswer;
+            document.getElementById('quiz-zorluk').value = soru.difficulty;
+
+            sorular.splice(index, 1);
+            soruListele();
+        }
+
+        function soruSil(index) {
+            sorular.splice(index, 1);
+            soruListele();
+        }
+
+        function quiziBaslat() {
+            if (sorular.length === 0) { 
+                alert("Soru eklemediniz!"); 
                 return;
             }
-            currentQuizIndex = 0; 
-            score = 0; 
+            mevcutSoruIndeksi = 0; 
+            puan = 0; 
             document.getElementById('quiz').style.display = 'block'; 
-            document.getElementById('start-quiz-button').style.display = 'none'; 
-            showQuestion(); 
+            document.getElementById('quiz-baslat-butonu').style.display = 'none'; 
+            soruGoster(); 
         }
 
-       
-        function showQuestion() {
-            const quizQuestion = document.getElementById('quiz-question'); 
-            const quizChoices = document.getElementById('quiz-choices'); 
-            if (currentQuizIndex < questions.length) { 
-                quizQuestion.textContent = questions[currentQuizIndex].text; 
-                quizChoices.innerHTML = ''; 
-                questions[currentQuizIndex].choices.forEach((choice, index) => {
-                    
-                    quizChoices.innerHTML += `
-                        <input type="radio" name="quiz-choice" value="${index + 1}"> ${choice}<br>
+        function soruGoster() {
+            const quizSoru = document.getElementById('quiz-soru'); 
+            const quizSecenekler = document.getElementById('quiz-secenekler'); 
+            if (mevcutSoruIndeksi < sorular.length) { 
+                quizSoru.textContent = sorular[mevcutSoruIndeksi].text; 
+                quizSecenekler.innerHTML = ''; 
+                sorular[mevcutSoruIndeksi].choices.forEach((secenek, index) => {
+                    quizSecenekler.innerHTML += `
+                        <input type="radio" name="quiz-secenek" value="${index + 1}"> ${secenek}<br>
                     `;
                 });
             } else {
-                quizQuestion.textContent = "Tebrikler! Tüm soruları tamamladınız."; 
-                quizChoices.innerHTML = ''; 
-                document.getElementById('score').textContent = "Toplam Puan: " + score; 
+                quizSoru.textContent = "Tebrikler! Tüm soruları tamamladınız."; 
+                quizSecenekler.innerHTML = ''; 
+                document.getElementById('puan').textContent = "Toplam Puan: " + puan; 
             }
         }
 
-        function submitAnswer() {
-            const selectedAnswer = document.querySelector('input[name="quiz-choice"]:checked'); 
-            if (selectedAnswer) { 
-                const answerValue = parseInt(selectedAnswer.value); 
-                if (answerValue === questions[currentQuizIndex].correctAnswer) { 
-                    score += 10; 
+        function cevapla() {
+            const secilenCevap = document.querySelector('input[name="quiz-secenek"]:checked'); 
+            if (secilenCevap) { 
+                const cevapDegeri = parseInt(secilenCevap.value); 
+                if (cevapDegeri === sorular[mevcutSoruIndeksi].correctAnswer) { 
+                    puan += 10; 
                 }
-                currentQuizIndex++; 
-                showQuestion(); 
+                mevcutSoruIndeksi++; 
+                soruGoster(); 
             } else {
-                alert("Bir Cevabn seçinm"); 
+                alert("Bir cevap seçin"); 
             }
-            document.getElementById('score').textContent = "Puan: " + score; 
+            document.getElementById('puan').textContent = "Puan: " + puan; 
         }
     </script>
 </body>
