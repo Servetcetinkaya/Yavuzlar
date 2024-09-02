@@ -1,0 +1,6 @@
+İlk önce veritabani_olustur.php betiğimizi çalıştırıyoruz ve otomatik olarak belirtmiş olduğum dizin olarak /tmp/ dizi'nin altına quiz.db adında bir database oluşturuyor.
+Eğer ki bu betik çalışırsa bize veriler ve tablolar oluşturuldu adında sayfa gelicek. Burdan sonra ki işlemde , login.php'ye giderek hesablarımıza giriş yapabiliriz.
+Kullanıcılar ;
+" admin:12345   rolü : administrator
+  servet:12345  rolü : yarışmacı/standart üye
+  ozgur:12345   rolü : yarışmacı/standart üye "
