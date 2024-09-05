@@ -55,6 +55,8 @@ if (!$result) {
         ?>
     </table>
     <br><a href="quiz_yarismasi.php">Quiz'e Dön</a>
+<form method="get" action="login.php" style="margin-bottom: 20px;">
+        <input type="submit" value="Çıkış Yap">
+    </form>
 </body>
 </html>
-
