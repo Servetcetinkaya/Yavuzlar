@@ -12,14 +12,14 @@ try {
     exit();
 }
 
-// Yemek detayı ve yorumları getir
+
 $yemek_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $yemek = null;
 $yorumlar = [];
 
 if ($yemek_id > 0) {
     try {
-        // Yemek detayını getir
+        
         $stmt = $baglanti->prepare("SELECT * FROM yemekler WHERE id = :id");
         $stmt->bindParam(':id', $yemek_id);
         $stmt->execute();
@@ -42,7 +42,7 @@ if ($yemek_id > 0) {
             }
         }
 
-        // Yorumları getir
+        
         $stmt = $baglanti->prepare("SELECT * FROM yorumlar WHERE yemek_id = :id ORDER BY id DESC");
         $stmt->bindParam(':id', $yemek_id);
         $stmt->execute();
@@ -53,7 +53,7 @@ if ($yemek_id > 0) {
     }
 }
 
-// Yorum gönderimi
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['yorum_gonder'])) {
     if (isset($_SESSION['kullanici_adi'])) {
         $kullanici_adi = $_SESSION['kullanici_adi'];
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['yorum_gonder'])) {
     }
 }
 
-// Yorum silme
+
 if (isset($_GET['sil']) && isset($_SESSION['kullanici_adi'])) {
     $yorum_id = intval($_GET['sil']);
     try {

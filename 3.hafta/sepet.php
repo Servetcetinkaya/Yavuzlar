@@ -10,33 +10,33 @@ try {
     exit();
 }
 
-// Sepet verisini al
+
 $sepet = $_SESSION['sepet'] ?? [];
 $toplam_tutar = 0;
 
-// Sepetten ürün silme işlemi
+
 if (isset($_GET['action']) && $_GET['action'] == 'sil' && isset($_GET['id'])) {
     $urun_id = intval($_GET['id']);
     if (isset($sepet[$urun_id])) {
-        unset($sepet[$urun_id]); // Ürünü sil
-        $_SESSION['sepet'] = $sepet; // Sepeti güncelle
+        unset($sepet[$urun_id]); 
+        $_SESSION['sepet'] = $sepet; 
     }
-    header("Location: sepet.php"); // Sepet sayfasına yönlendir
+    header("Location: sepet.php"); 
     exit();
 }
 
-// Bakiyeyi yükleme işlemi
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['bakiye'])) {
     $yuklenecek_bakiye = floatval($_POST['bakiye']);
     $_SESSION['kullanici_bakiyesi'] = ($_SESSION['kullanici_bakiyesi'] ?? 0) + $yuklenecek_bakiye;
 }
 
-// Not ekleme/düzenleme işlemi
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['not'])) {
     $_SESSION['siparis_notu'] = trim($_POST['not']);
 }
 
-// Satın alma işlemi
+
 if (isset($_GET['action']) && $_GET['action'] == 'satinal') {
     foreach ($sepet as $urun) {
         $toplam_tutar += $urun['fiyat'] * $urun['adet'];
@@ -44,10 +44,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'satinal') {
 
     $kullanici_bakiyesi = $_SESSION['kullanici_bakiyesi'] ?? 0;
 
-    // Eğer bakiyeniz yeterliyse satın alma işlemi
+    
     if ($kullanici_bakiyesi >= $toplam_tutar) {
-        $_SESSION['kullanici_bakiyesi'] -= $toplam_tutar; // Bakiyeyi düşür
-        $_SESSION['sepet'] = []; // Sepeti temizle
+        $_SESSION['kullanici_bakiyesi'] -= $toplam_tutar; 
+        $_SESSION['sepet'] = []; 
         echo "<script>alert('Satın alma işlemi başarıyla gerçekleştirildi!'); window.location.href='ana_sayfa.php';</script>";
         exit();
     } else {
@@ -181,7 +181,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'satinal') {
             <input type="submit" value="Bakiye Yükle">
         </form>
 
-        <!-- Sipariş Notu -->
+        
         <h2>Sipariş Notu</h2>
         <form action="sepet.php" method="post">
             <textarea name="not" placeholder="Sipariş notunuzu buraya yazın..."><?php echo htmlspecialchars($_SESSION['siparis_notu'] ?? ''); ?></textarea>

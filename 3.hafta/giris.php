@@ -13,14 +13,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $baglanti = new PDO("sqlite:$veritabani");
         $baglanti->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Kullanıcıyı veritabanından al
+        
         $stmt = $baglanti->prepare("SELECT * FROM kullanicilar WHERE kullanici_adi = :kullanici_adi");
         $stmt->bindParam(':kullanici_adi', $kullanici_adi);
         $stmt->execute();
         
         $kullanici = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Eğer kullanıcı bulunduysa, şifreyi kontrol et
+        
         if ($kullanici && $kullanici['sifre'] === $sifre) {
             $_SESSION['kullanici_adi'] = $kullanici['kullanici_adi'];
             $_SESSION['rol'] = $kullanici['rol'];
@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giriş Yap</title>
     <style>
-        /* Stil kodları buraya gelecek */
+        
     </style>
 </head>
 <body>
