@@ -41,13 +41,13 @@ if ($dish_id > 0) {
             }
         }
 
-        // Fetch comments
+       
         $stmt = $connection->prepare("SELECT * FROM comments WHERE meal_id = :id ORDER BY id DESC");
         $stmt->bindParam(':id', $dish_id);
         $stmt->execute();
         $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Calculate average rating
+       
         if (count($comments) > 0) {
             $total_rating = 0;
             foreach ($comments as $comment) {
