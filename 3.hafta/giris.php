@@ -129,7 +129,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit">Giriş Yap</button>
         </form>
     </div>
-    <br> admin:admin <br> servet:servet <br>
+    admin:admin <br> servet:servet
 </body>
 </html>
 
