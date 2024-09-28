@@ -12,7 +12,7 @@ try {
     exit();
 }
 
-// Fetch meals
+
 $meals = [];
 try {
     $stmt = $connection->query("SELECT * FROM meals");
@@ -112,7 +112,7 @@ try {
                     <div class="buttons">
                         <a href="yemek_detay.php?id=<?php echo htmlspecialchars($meal['id']); ?>">Detay</a>
                         
-                        <!-- Buy button form -->
+                        
           <form action="sepet.php" method="POST">
     <input type="hidden" name="meal_id" value="<?= $meal['id'] ?>">
     <input type="hidden" name="meal_name" value="<?= $meal['name'] ?>"> 
