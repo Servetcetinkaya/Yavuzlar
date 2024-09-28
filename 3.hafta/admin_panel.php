@@ -1,31 +1,31 @@
 <?php
-// Error reporting settings
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 $database_path = "/tmp/yemek_sitesi.db";
 
 try {
-    // Veritabanı bağlantısı oluşturuluyor
+    
     $connection = new PDO("sqlite:$database_path");
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Kullanıcıları getir (sadece normal kullanıcılar, silinmemiş olanlar)
+    
     $stmt = $connection->prepare('SELECT * FROM users WHERE deleted = 0 AND role != "admin" GROUP BY username'); // Kullanıcı adı ile grupla
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Restoranları getir
+   
     $stmt = $connection->prepare('SELECT * FROM restaurants');
     $stmt->execute();
     $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Yemekleri getir
+    
     $stmt = $connection->prepare('SELECT * FROM meals');
     $stmt->execute();
     $meals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Firmaları getir
+    
     $stmt = $connection->prepare('SELECT * FROM firms');
     $stmt->execute();
     $firms = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -34,7 +34,7 @@ try {
     echo "Veritabanı hatası: " . $e->getMessage();
 }
 
-// Kullanıcıyı silme (soft delete)
+
 if (isset($_POST['delete_user'])) {
     $user_id = $_POST['user_id'];
     $stmt = $connection->prepare('UPDATE users SET deleted = 1 WHERE id = :id');
@@ -44,7 +44,7 @@ if (isset($_POST['delete_user'])) {
     exit();
 }
 
-// Kullanıcıyı banı kaldırma
+
 if (isset($_POST['undelete_user'])) {
     $user_id = $_POST['user_id'];
     $stmt = $connection->prepare('UPDATE users SET deleted = 0 WHERE id = :id');
@@ -54,7 +54,7 @@ if (isset($_POST['undelete_user'])) {
     exit();
 }
 
-// Yemek ekleme
+
 if (isset($_POST['add_meal'])) {
     $meal_name = $_POST['meal_name'];
     $meal_price = $_POST['meal_price'];
@@ -71,7 +71,7 @@ if (isset($_POST['add_meal'])) {
     exit();
 }
 
-// Yemek düzenleme
+
 if (isset($_POST['edit_meal'])) {
     $meal_id = $_POST['meal_id'];
     $meal_name = $_POST['meal_name'];
@@ -90,7 +90,7 @@ if (isset($_POST['edit_meal'])) {
     exit();
 }
 
-// Restoran ekleme
+
 if (isset($_POST['add_restaurant'])) {
     $restaurant_name = $_POST['restaurant_name'];
     $firm_id = $_POST['firm_id'];
@@ -103,7 +103,7 @@ if (isset($_POST['add_restaurant'])) {
     exit();
 }
 
-// Firma ekleme
+
 if (isset($_POST['add_firm'])) {
     $firm_name = $_POST['firm_name'];
 
@@ -114,7 +114,7 @@ if (isset($_POST['add_firm'])) {
     exit();
 }
 
-// Restoran arama
+
 $search_restaurant = '';
 if (isset($_POST['search_restaurant'])) {
     $search_restaurant = $_POST['search_restaurant'];
@@ -124,7 +124,7 @@ if (isset($_POST['search_restaurant'])) {
     $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Yemek arama
+
 $search_meal = '';
 if (isset($_POST['search_meal'])) {
     $search_meal = $_POST['search_meal'];
