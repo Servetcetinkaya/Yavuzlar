@@ -1,19 +1,19 @@
 <?php
-// Hata raporlama ayarları
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 $database_path = "/tmp/yemek_sitesi.db";
 
 try {
-    // Veritabanı bağlantısı oluşturuluyor
+   
     $connection = new PDO("sqlite:$database_path");
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     echo "Veritabanı hatası: " . $e->getMessage();
 }
 
-// Kullanıcının bakiyesini alma
+
 session_start();
 $user_id = $_SESSION['user_id'] ?? null;
 $balance = 0;
@@ -26,11 +26,11 @@ if ($user_id) {
     $balance = $user['balance'] ?? 0;
 }
 
-// Sepet işlemleri
+
 $cart = $_SESSION['cart'] ?? [];
 $total_price = 0;
 
-// Sepete ekleme
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
     $meal_id = $_POST['meal_id'] ?? null;
     $meal_name = $_POST['meal_name'] ?? null;
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
     exit;
 }
 
-// Silme işlemi
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove'])) {
     $remove_index = $_POST['remove'];
     if (isset($cart[$remove_index])) {
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove'])) {
     }
 }
 
-// Not güncelleme işlemi
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_note'])) {
     $note_index = $_POST['note_index'] ?? null;
     $new_note = $_POST['new_note'] ?? '';
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_note'])) {
     }
 }
 
-// Bakiye yükleme işlemi
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_balance'])) {
     $amount = $_POST['amount'] ?? 0;
     if ($amount > 0) {
@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_balance'])) {
     }
 }
 
-// Satın alma işlemi
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['purchase'])) {
     $total_price = array_sum(array_column($cart, 'price'));
     
@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['purchase'])) {
     }
 }
 
-// Sepetteki yemekleri hesapla
+
 foreach ($cart as $item) {
     $total_price += $item['price'];
 }
