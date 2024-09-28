@@ -1,22 +1,22 @@
 <?php
-// Error reporting settings
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 $database_path = "/tmp/yemek_sitesi.db";
 
 try {
-    // Veritabanı bağlantısı oluşturuluyor
+    
     $connection = new PDO("sqlite:$database_path");
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Firms tablosu
+    
     $connection->exec("CREATE TABLE IF NOT EXISTS firms (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL
     )");
 
-    // Restaurants tablosu
+   
     $connection->exec("CREATE TABLE IF NOT EXISTS restaurants (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
@@ -24,7 +24,7 @@ try {
         FOREIGN KEY (firm_id) REFERENCES firms(id)
     )");
 
-    // Meals tablosu
+    
     $connection->exec("CREATE TABLE IF NOT EXISTS meals (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
@@ -34,7 +34,7 @@ try {
         FOREIGN KEY (restaurant_id) REFERENCES restaurants(id)
     )");
 
-    // Comments tablosu
+    
     $connection->exec("CREATE TABLE IF NOT EXISTS comments (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         meal_id INTEGER NOT NULL,
@@ -44,7 +44,7 @@ try {
         FOREIGN KEY (meal_id) REFERENCES meals(id)
     )");
 
-    // Users tablosu (varsa silinmeyecek)
+    
     $connection->exec("CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL UNIQUE,
@@ -54,7 +54,7 @@ try {
         deleted INTEGER DEFAULT 0 -- Kullanıcıyı silmek için
     )");
 
-    // Order History tablosunu oluştur (varsa silinmeyecek)
+    
     $connection->exec("CREATE TABLE IF NOT EXISTS order_history (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
@@ -69,7 +69,7 @@ try {
         FOREIGN KEY (meal_id) REFERENCES meals(id)
     )");
 
-    // Admin ve Servet kullanıcılarını ekle
+    
     $hashed_password_admin = hash('sha256', 'admin');
     $hashed_password_servet = hash('sha256', 'servet');
 
