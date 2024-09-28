@@ -1,35 +1,35 @@
 <?php
-// Hata raporlama ayarları
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 $database_path = "/tmp/yemek_sitesi.db";
 
 try {
-    // Veritabanı bağlantısı oluşturuluyor
+    
     $connection = new PDO("sqlite:$database_path");
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Kullanıcının kimliğini al
+    
     session_start();
     $user_id = $_SESSION['user_id']; // Kullanıcı kimliğini oturumdan al
 
-    // Sipariş geçmişini al
+    
     $stmt = $connection->prepare("SELECT * FROM order_history WHERE user_id = :user_id");
     $stmt->execute(['user_id' => $user_id]);
     $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Silme işlemi
+    
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_order'])) {
         $order_id = $_POST['delete_order'];
 
-        // Siparişi sil
+        
         $delete_stmt = $connection->prepare("DELETE FROM order_history WHERE id = :order_id AND user_id = :user_id");
         $delete_stmt->bindParam(':order_id', $order_id);
         $delete_stmt->bindParam(':user_id', $user_id);
         $delete_stmt->execute();
 
-        // Yeniden siparişleri al
+        
         $stmt->execute(['user_id' => $user_id]);
         $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -74,7 +74,7 @@ try {
         </tr>
         <?php endforeach; ?>
     </table>
-    <a href="ana_sayfa.php">Ana Sayfaya Dön</a> <!-- Ana sayfaya dönme butonu -->
+    <a href="ana_sayfa.php">Ana Sayfaya Dön</a> 
 </body>
 </html>
 
