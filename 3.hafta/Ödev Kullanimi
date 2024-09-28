@@ -1,0 +1,4 @@
+profil resmi çalışması için profil_resimleri adında dizin oluşturmanız gerekiyor.
+Giriş bilgileri : servet:servet ( müşteri )
+admin:admin 
+Ve en başta veritabani_olustur.php betiğini çalıştırmak gerekiyor, bu betik /tmp/ dizini altında yemek_sitesi.db adında bir veritabani oluşturucak.
