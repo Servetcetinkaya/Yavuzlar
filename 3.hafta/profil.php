@@ -7,20 +7,20 @@ $database_path = "/tmp/yemek_sitesi.db";
 $connection = new PDO("sqlite:$database_path");
 $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Şifre güncelleme işlemi
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_password'])) {
         $current_password = $_POST['current_password'];
         $new_password = $_POST['new_password'];
         $hashed_current_password = hash('sha256', $current_password);
         
-        // Kullanıcıyı veritabanından çek
+        
         $stmt = $connection->prepare("SELECT * FROM users WHERE id = :id AND password = :password");
         $stmt->execute(['id' => $_SESSION['user_id'], 'password' => $hashed_current_password]);
         $user = $stmt->fetch();
 
         if ($user) {
-            // Yeni şifreyi güncelle
+            
             $hashed_new_password = hash('sha256', $new_password);
             $update_stmt = $connection->prepare("UPDATE users SET password = :password WHERE id = :id");
             $update_stmt->execute(['password' => $hashed_new_password, 'id' => $_SESSION['user_id']]);
@@ -30,15 +30,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Resim yükleme işlemi
+   
     if (isset($_FILES['profile_picture'])) {
         $target_folder = 'profil_resimleri/';
         $target_file = $target_folder . basename($_FILES['profile_picture']['name']);
 
         if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target_file)) {
-            $_SESSION['profile_picture'] = $target_file; // Resmi oturumda sakla
+            $_SESSION['profile_picture'] = $target_file; 
         } else {
-            echo "Resim yükleme hatası.";
+            echo " yükleme hatası.";
         }
     }
 }
@@ -115,9 +115,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 
     <form method="POST" enctype="multipart/form-data">
-        <label for="profile_picture">Resim Yükle</label>
+        <label for="profile_picture">Resim Yükle yağuşuklu </label>
         <input type="file" name="profile_picture" accept="image/*" required>
-        <button type="submit">Yükle</button>
+        <button type="submit">yükle</button>
     </form>
 
     <?php if (isset($_SESSION['profile_picture'])): ?>
